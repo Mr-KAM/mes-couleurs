@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Exécuter la fonction</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.2/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/css">
+    html {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    body {
+        width: 100vw;
+        height: 100vh;
+        margin: 0px;
+        padding: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .scrollbar::-webkit-scrollbar {
+        width: 10px;
+        /* width of the entire scrollbar */
+    }
+
+    .scrollbar::-webkit-scrollbar-track {
+        background: #2B3440;
+        border-radius: 30px;
+        /* color of the tracking area */
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+        background-color: orange;
+        /* color of the scroll thumb */
+        border-radius: 20px;
+        /* roundness of the scroll thumb */
+        border: 3px solid #2B3440;
+        /* creates padding around scroll thumb */
+    }
+
+    #result {
+        flex-wrap: wrap;
+        gap: gap;
+        align-content: center;
+        overflow-y:auto;
+        overflow-x: hidden;
+    }
+
+    #copier {
+        display: none;
+        margin-left: 10px;
+    }
+
+    .bouttons {
+        display: flex;
+    }
+
+    #code {
+        display: none;
+        overflow: auto;
+        width: 80%;
+        height: 150px;
+    }
+
+    #alerte {
+        display: none;
+    }
+    </style>
+</head>
+
+<body data-theme="night" class="font-mono">
+    <div id="image">
+    </div>
+    <div class="alert alert-success" id="alerte">
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-6" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span>Couleurs copier dans le presse-papier !</span>
+    </div>
+    <br>
+    <h1 class="font-black text-5xl" style="">
+        🌈 Mes couleurs 1.0
+    </h1>
+    <br>
+    <div class="mockup-browser border bg-base-300">
+        <div class="mockup-browser-toolbar">
+            <div class="input">https://mes-couleurs.com</div>
+        </div>
+        <div id="result" class="flex justify-center px-4 py-16 bg-base-200">
+            <h1>Selectionnez une image pour commencer !</h1>
+        </div>
+    </div>
+    <br>
+    <div class="mockup-code scrollbar" id='code'>
+        <pre data-prefix=">" class="text-warning"><code>Liste des couleurs :</code></pre>
+        <pre data-prefix=">" class="text-success"><code id="animated" class="">...</code></pre>
+    </div>
+    <br>
+    <div class="bouttons">
+        <form method="POST" action="/selectColors" id="colors-picker" class="btn btn-warning max-w-md">
+            <input type="submit" class="" value="Image à explorer">
+        </form>
+        <button id="copier" class="btn btn-success" value="Copier">Copier</button>
+    </div>
+    <script>
+    document.getElementById('colors-picker').addEventListener('submit', function(e) {
+        document.getElementById('result').innerHTML = '<span class="loading loading-ring loading-lg"></span>';
+        document.getElementById('code').style.display = "block"
+        document.getElementById('code').innerHTML = '<pre data-prefix=">" class="text-success"><code id="animated" class=""><span class="loading loading-spinner text-success"></span>...</code></pre>'
+        e.preventDefault();
+        fetch('/selectColors', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                const listColor = document.getElementById('code');
+                listColor.innerHTML = ''
+                resultDiv.innerHTML = ''; // Effacer le contenu précédent
+
+                data.result.forEach(color => {
+                    const colorDiv = document.createElement('div');
+                    colorDiv.style.width = '60px'; // Largeur du carré
+                    colorDiv.style.height = '60px'; // Hauteur du carré
+                    colorDiv.style.borderRadius = '20px'; // Hauteur du carré
+                    colorDiv.style.backgroundColor = color;
+                    colorDiv.style.margin = "5px";
+                    resultDiv.appendChild(colorDiv);
+                });
+
+                document.getElementById('code').innerHTML = data.colorscode
+                document.getElementById('copier').style.display = "block"
+            });
+    });
+    </script>
+    <script>
+    document.getElementById('copier').addEventListener('click', function() {
+        const balisesCode = document.getElementsByTagName('code');
+        let texteACopier = '';
+
+        for (let i = 0; i < balisesCode.length; i++) {
+            texteACopier += balisesCode[i].textContent + '\n';
+        }
+
+        const textarea = document.createElement('textarea');
+        textarea.value = texteACopier;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        const alerte = document.getElementById('alerte');
+        alerte.style.display = 'block'; // Afficher l'élément
+
+        setTimeout(function() {
+            alerte.style.display = 'none'; // Cacher l'élément après 5 secondes
+        }, 5000); // 5000 millisecondes = 5 secondes
+    });
+    </script>
+</body>
+
+</html>
