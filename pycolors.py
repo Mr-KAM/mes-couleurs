@@ -5,7 +5,7 @@ from sklearn.cluster import KMeans
 import numpy as np
 
 
-def extract_colors_from_image(image_path, num_colors=20):
+def extract_colors_from_image(image_path, num_colors=10):
     try:
         # Importation de l'image et convertion en matrice RGB de pixels
         image = Image.open(image_path)

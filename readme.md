@@ -1,6 +1,6 @@
 # Mes Couleurs - Application d'extraction et de copie de palettes de couleurs
 
-"Mes Couleurs" est une application Python qui simplifie l'extraction de palettes de couleurs à partir d'images et permet de les copier rapidement dans le presse-papiers. Cette application conviviale combine différentes bibliothèques pour une expérience utilisateur fluide.
+"Mes Couleurs"* est une application Python qui simplifie l'extraction de palettes de couleurs à partir d'images et permet de les copier rapidement dans le presse-papiers. Cette application conviviale combine différentes bibliothèques pour une expérience utilisateur fluide.
 
 ## Fonctionnalités clés
 
@@ -30,8 +30,11 @@
 
 ## Configuration requise
 
-- Python
-- Les bibliothèques mentionnées ci-dessus
+- Assurez vous d'avoir python et git installé sur votre machine
+
+- Commencez par cloner le dépot en executant la commande suivante :
+
+git clone 
 
 ## Licence
 
